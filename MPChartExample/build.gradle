@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 34
+    compileSdk 34
     namespace "com.xxmassdeveloper.mpchartexample"
     defaultConfig {
         applicationId "com.xxmassdeveloper.mpchartexample"
-        minSdkVersion 16
-        targetSdkVersion 34
+        minSdk 26
+        targetSdk 34
         versionCode 57
         versionName '3.1.0'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -21,7 +21,7 @@ android {
 }
 
 dependencies {
-    implementation "androidx.appcompat:appcompat:1.0.2"
-    implementation 'com.google.android.material:material:1.0.0'
+    implementation "androidx.appcompat:appcompat:1.6.1"
+    implementation 'com.google.android.material:material:1.11.0'
     implementation project(':MPChartLib')
 }

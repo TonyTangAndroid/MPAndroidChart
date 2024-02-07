@@ -2,6 +2,7 @@
 package com.xxmassdeveloper.mpchartexample;
 
 import android.Manifest;
+import android.Manifest.permission;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -159,95 +160,69 @@ public class RadarChartActivity extends DemoBase {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()) {
-            case R.id.viewGithub: {
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse("https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/com/xxmassdeveloper/mpchartexample/RadarChartActivity.java"));
-                startActivity(i);
-                break;
-            }
-            case R.id.actionToggleValues: {
-                for (IDataSet<?> set : chart.getData().getDataSets())
-                    set.setDrawValues(!set.isDrawValuesEnabled());
+        int itemId = item.getItemId();
+        if (itemId == R.id.viewGithub) {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(
+                "https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/com/xxmassdeveloper/mpchartexample/RadarChartActivity.java"));
+            startActivity(i);
+        } else if (itemId == R.id.actionToggleValues) {
+            for (IDataSet<?> set : chart.getData().getDataSets())
+                set.setDrawValues(!set.isDrawValuesEnabled());
 
+            chart.invalidate();
+        } else if (itemId == R.id.actionToggleHighlight) {
+            if (chart.getData() != null) {
+                chart.getData().setHighlightEnabled(!chart.getData().isHighlightEnabled());
                 chart.invalidate();
-                break;
             }
-            case R.id.actionToggleHighlight: {
-                if (chart.getData() != null) {
-                    chart.getData().setHighlightEnabled(!chart.getData().isHighlightEnabled());
-                    chart.invalidate();
-                }
-                break;
-            }
-            case R.id.actionToggleRotate: {
-                if (chart.isRotationEnabled())
-                    chart.setRotationEnabled(false);
+        } else if (itemId == R.id.actionToggleRotate) {
+            if (chart.isRotationEnabled())
+                chart.setRotationEnabled(false);
+            else
+                chart.setRotationEnabled(true);
+            chart.invalidate();
+        } else if (itemId == R.id.actionToggleFilled) {
+            ArrayList<IRadarDataSet> sets = (ArrayList<IRadarDataSet>) chart.getData()
+                .getDataSets();
+
+            for (IRadarDataSet set : sets) {
+                if (set.isDrawFilledEnabled())
+                    set.setDrawFilled(false);
                 else
-                    chart.setRotationEnabled(true);
-                chart.invalidate();
-                break;
+                    set.setDrawFilled(true);
             }
-            case R.id.actionToggleFilled: {
+            chart.invalidate();
+        } else if (itemId == R.id.actionToggleHighlightCircle) {
+            ArrayList<IRadarDataSet> sets = (ArrayList<IRadarDataSet>) chart.getData()
+                .getDataSets();
 
-                ArrayList<IRadarDataSet> sets = (ArrayList<IRadarDataSet>) chart.getData()
-                        .getDataSets();
-
-                for (IRadarDataSet set : sets) {
-                    if (set.isDrawFilledEnabled())
-                        set.setDrawFilled(false);
-                    else
-                        set.setDrawFilled(true);
-                }
-                chart.invalidate();
-                break;
+            for (IRadarDataSet set : sets) {
+                set.setDrawHighlightCircleEnabled(!set.isDrawHighlightCircleEnabled());
             }
-            case R.id.actionToggleHighlightCircle: {
-
-                ArrayList<IRadarDataSet> sets = (ArrayList<IRadarDataSet>) chart.getData()
-                        .getDataSets();
-
-                for (IRadarDataSet set : sets) {
-                    set.setDrawHighlightCircleEnabled(!set.isDrawHighlightCircleEnabled());
-                }
-                chart.invalidate();
-                break;
-            }
-            case R.id.actionToggleXLabels: {
-                chart.getXAxis().setEnabled(!chart.getXAxis().isEnabled());
-                chart.notifyDataSetChanged();
-                chart.invalidate();
-                break;
-            }
-            case R.id.actionToggleYLabels: {
-
-                chart.getYAxis().setEnabled(!chart.getYAxis().isEnabled());
-                chart.invalidate();
-                break;
-            }
-            case R.id.animateX: {
-                chart.animateX(1400);
-                break;
-            }
-            case R.id.animateY: {
-                chart.animateY(1400);
-                break;
-            }
-            case R.id.animateXY: {
-                chart.animateXY(1400, 1400);
-                break;
-            }
-            case R.id.actionToggleSpin: {
-                chart.spin(2000, chart.getRotationAngle(), chart.getRotationAngle() + 360, Easing.EaseInOutCubic);
-                break;
-            }
-            case R.id.actionSave: {
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    saveToGallery();
-                } else {
-                    requestStoragePermission(chart);
-                }
-                break;
+            chart.invalidate();
+        } else if (itemId == R.id.actionToggleXLabels) {
+            chart.getXAxis().setEnabled(!chart.getXAxis().isEnabled());
+            chart.notifyDataSetChanged();
+            chart.invalidate();
+        } else if (itemId == R.id.actionToggleYLabels) {
+            chart.getYAxis().setEnabled(!chart.getYAxis().isEnabled());
+            chart.invalidate();
+        } else if (itemId == R.id.animateX) {
+            chart.animateX(1400);
+        } else if (itemId == R.id.animateY) {
+            chart.animateY(1400);
+        } else if (itemId == R.id.animateXY) {
+            chart.animateXY(1400, 1400);
+        } else if (itemId == R.id.actionToggleSpin) {
+            chart.spin(2000, chart.getRotationAngle(), chart.getRotationAngle() + 360,
+                Easing.EaseInOutCubic);
+        } else if (itemId == R.id.actionSave) {
+            if (ContextCompat.checkSelfPermission(this, permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED) {
+                saveToGallery();
+            } else {
+                requestStoragePermission(chart);
             }
         }
         return true;

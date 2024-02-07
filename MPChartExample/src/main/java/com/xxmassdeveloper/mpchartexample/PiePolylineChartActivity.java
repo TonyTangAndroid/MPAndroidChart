@@ -2,6 +2,7 @@
 package com.xxmassdeveloper.mpchartexample;
 
 import android.Manifest;
+import android.Manifest.permission;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -182,90 +183,67 @@ public class PiePolylineChartActivity extends DemoBase implements OnSeekBarChang
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()) {
-            case R.id.viewGithub: {
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse("https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/com/xxmassdeveloper/mpchartexample/PiePolylineChartActivity.java"));
-                startActivity(i);
-                break;
-            }
-            case R.id.actionToggleValues: {
-                for (IDataSet<?> set : chart.getData().getDataSets())
-                    set.setDrawValues(!set.isDrawValuesEnabled());
+        int itemId = item.getItemId();
+        if (itemId == R.id.viewGithub) {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(
+                "https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/com/xxmassdeveloper/mpchartexample/PiePolylineChartActivity.java"));
+            startActivity(i);
+        } else if (itemId == R.id.actionToggleValues) {
+            for (IDataSet<?> set : chart.getData().getDataSets())
+                set.setDrawValues(!set.isDrawValuesEnabled());
 
-                chart.invalidate();
-                break;
+            chart.invalidate();
+        } else if (itemId == R.id.actionToggleHole) {
+            if (chart.isDrawHoleEnabled())
+                chart.setDrawHoleEnabled(false);
+            else
+                chart.setDrawHoleEnabled(true);
+            chart.invalidate();
+        } else if (itemId == R.id.actionToggleMinAngles) {
+            if (chart.getMinAngleForSlices() == 0f)
+                chart.setMinAngleForSlices(36f);
+            else
+                chart.setMinAngleForSlices(0f);
+            chart.notifyDataSetChanged();
+            chart.invalidate();
+        } else if (itemId == R.id.actionToggleCurvedSlices) {
+            boolean toSet = !chart.isDrawRoundedSlicesEnabled() || !chart.isDrawHoleEnabled();
+            chart.setDrawRoundedSlices(toSet);
+            if (toSet && !chart.isDrawHoleEnabled()) {
+                chart.setDrawHoleEnabled(true);
             }
-            case R.id.actionToggleHole: {
-                if (chart.isDrawHoleEnabled())
-                    chart.setDrawHoleEnabled(false);
-                else
-                    chart.setDrawHoleEnabled(true);
-                chart.invalidate();
-                break;
+            if (toSet && chart.isDrawSlicesUnderHoleEnabled()) {
+                chart.setDrawSlicesUnderHole(false);
             }
-            case R.id.actionToggleMinAngles: {
-                if (chart.getMinAngleForSlices() == 0f)
-                    chart.setMinAngleForSlices(36f);
-                else
-                    chart.setMinAngleForSlices(0f);
-                chart.notifyDataSetChanged();
-                chart.invalidate();
-                break;
-            }
-            case R.id.actionToggleCurvedSlices: {
-                boolean toSet = !chart.isDrawRoundedSlicesEnabled() || !chart.isDrawHoleEnabled();
-                chart.setDrawRoundedSlices(toSet);
-                if (toSet && !chart.isDrawHoleEnabled()) {
-                    chart.setDrawHoleEnabled(true);
-                }
-                if (toSet && chart.isDrawSlicesUnderHoleEnabled()) {
-                    chart.setDrawSlicesUnderHole(false);
-                }
-                chart.invalidate();
-                break;
-            }
-            case R.id.actionDrawCenter: {
-                if (chart.isDrawCenterTextEnabled())
-                    chart.setDrawCenterText(false);
-                else
-                    chart.setDrawCenterText(true);
-                chart.invalidate();
-                break;
-            }
-            case R.id.actionToggleXValues: {
-
-                chart.setDrawEntryLabels(!chart.isDrawEntryLabelsEnabled());
-                chart.invalidate();
-                break;
-            }
-            case R.id.actionTogglePercent:
-                chart.setUsePercentValues(!chart.isUsePercentValuesEnabled());
-                chart.invalidate();
-                break;
-            case R.id.animateX: {
-                chart.animateX(1400);
-                break;
-            }
-            case R.id.animateY: {
-                chart.animateY(1400);
-                break;
-            }
-            case R.id.animateXY: {
-                chart.animateXY(1400, 1400);
-                break;
-            }
-            case R.id.actionToggleSpin: {
-                chart.spin(1000, chart.getRotationAngle(), chart.getRotationAngle() + 360, Easing.EaseInOutCubic);
-                break;
-            }
-            case R.id.actionSave: {
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    saveToGallery();
-                } else {
-                    requestStoragePermission(chart);
-                }
-                break;
+            chart.invalidate();
+        } else if (itemId == R.id.actionDrawCenter) {
+            if (chart.isDrawCenterTextEnabled())
+                chart.setDrawCenterText(false);
+            else
+                chart.setDrawCenterText(true);
+            chart.invalidate();
+        } else if (itemId == R.id.actionToggleXValues) {
+            chart.setDrawEntryLabels(!chart.isDrawEntryLabelsEnabled());
+            chart.invalidate();
+        } else if (itemId == R.id.actionTogglePercent) {
+            chart.setUsePercentValues(!chart.isUsePercentValuesEnabled());
+            chart.invalidate();
+        } else if (itemId == R.id.animateX) {
+            chart.animateX(1400);
+        } else if (itemId == R.id.animateY) {
+            chart.animateY(1400);
+        } else if (itemId == R.id.animateXY) {
+            chart.animateXY(1400, 1400);
+        } else if (itemId == R.id.actionToggleSpin) {
+            chart.spin(1000, chart.getRotationAngle(), chart.getRotationAngle() + 360,
+                Easing.EaseInOutCubic);
+        } else if (itemId == R.id.actionSave) {
+            if (ContextCompat.checkSelfPermission(this, permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED) {
+                saveToGallery();
+            } else {
+                requestStoragePermission(chart);
             }
         }
         return true;

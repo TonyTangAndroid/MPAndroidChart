@@ -2,6 +2,7 @@
 package com.xxmassdeveloper.mpchartexample;
 
 import android.Manifest;
+import android.Manifest.permission;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -151,98 +152,76 @@ public class InvertedLineChartActivity extends DemoBase implements OnSeekBarChan
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()) {
-            case R.id.viewGithub: {
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse("https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/com/xxmassdeveloper/mpchartexample/InvertedLineChartActivity.java"));
-                startActivity(i);
-                break;
+        int itemId = item.getItemId();
+        if (itemId == R.id.viewGithub) {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(
+                "https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/com/xxmassdeveloper/mpchartexample/InvertedLineChartActivity.java"));
+            startActivity(i);
+        } else if (itemId == R.id.actionToggleValues) {
+            List<ILineDataSet> sets = chart.getData()
+                .getDataSets();
+
+            for (ILineDataSet iSet : sets) {
+
+                LineDataSet set = (LineDataSet) iSet;
+                set.setDrawValues(!set.isDrawValuesEnabled());
             }
-            case R.id.actionToggleValues: {
-                List<ILineDataSet> sets = chart.getData()
-                        .getDataSets();
 
-                for (ILineDataSet iSet : sets) {
-
-                    LineDataSet set = (LineDataSet) iSet;
-                    set.setDrawValues(!set.isDrawValuesEnabled());
-                }
-
+            chart.invalidate();
+        } else if (itemId == R.id.actionToggleHighlight) {
+            if (chart.getData() != null) {
+                chart.getData().setHighlightEnabled(!chart.getData().isHighlightEnabled());
                 chart.invalidate();
-                break;
             }
-            case R.id.actionToggleHighlight: {
-                if(chart.getData() != null) {
-                    chart.getData().setHighlightEnabled(!chart.getData().isHighlightEnabled());
-                    chart.invalidate();
-                }
-                break;
-            }
-            case R.id.actionToggleFilled: {
+        } else if (itemId == R.id.actionToggleFilled) {
+            List<ILineDataSet> sets = chart.getData()
+                .getDataSets();
 
-                List<ILineDataSet> sets = chart.getData()
-                        .getDataSets();
+            for (ILineDataSet iSet : sets) {
 
-                for (ILineDataSet iSet : sets) {
-
-                    LineDataSet set = (LineDataSet) iSet;
-                    if (set.isDrawFilledEnabled())
-                        set.setDrawFilled(false);
-                    else
-                        set.setDrawFilled(true);
-                }
-                chart.invalidate();
-                break;
-            }
-            case R.id.actionToggleCircles: {
-                List<ILineDataSet> sets = chart.getData()
-                        .getDataSets();
-
-                for (ILineDataSet iSet : sets) {
-
-                    LineDataSet set = (LineDataSet) iSet;
-                    if (set.isDrawCirclesEnabled())
-                        set.setDrawCircles(false);
-                    else
-                        set.setDrawCircles(true);
-                }
-                chart.invalidate();
-                break;
-            }
-            case R.id.animateX: {
-                chart.animateX(2000);
-                break;
-            }
-            case R.id.animateY: {
-                chart.animateY(2000);
-                break;
-            }
-            case R.id.animateXY: {
-
-                chart.animateXY(2000, 2000);
-                break;
-            }
-            case R.id.actionTogglePinch: {
-                if (chart.isPinchZoomEnabled())
-                    chart.setPinchZoom(false);
+                LineDataSet set = (LineDataSet) iSet;
+                if (set.isDrawFilledEnabled())
+                    set.setDrawFilled(false);
                 else
-                    chart.setPinchZoom(true);
+                    set.setDrawFilled(true);
+            }
+            chart.invalidate();
+        } else if (itemId == R.id.actionToggleCircles) {
+            List<ILineDataSet> sets = chart.getData()
+                .getDataSets();
 
-                chart.invalidate();
-                break;
+            for (ILineDataSet iSet : sets) {
+
+                LineDataSet set = (LineDataSet) iSet;
+                if (set.isDrawCirclesEnabled())
+                    set.setDrawCircles(false);
+                else
+                    set.setDrawCircles(true);
             }
-            case R.id.actionToggleAutoScaleMinMax: {
-                chart.setAutoScaleMinMaxEnabled(!chart.isAutoScaleMinMaxEnabled());
-                chart.notifyDataSetChanged();
-                break;
-            }
-            case R.id.actionSave: {
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    saveToGallery();
-                } else {
-                    requestStoragePermission(chart);
-                }
-                break;
+            chart.invalidate();
+        } else if (itemId == R.id.animateX) {
+            chart.animateX(2000);
+        } else if (itemId == R.id.animateY) {
+            chart.animateY(2000);
+        } else if (itemId == R.id.animateXY) {
+            chart.animateXY(2000, 2000);
+        } else if (itemId == R.id.actionTogglePinch) {
+            if (chart.isPinchZoomEnabled())
+                chart.setPinchZoom(false);
+            else
+                chart.setPinchZoom(true);
+
+            chart.invalidate();
+        } else if (itemId == R.id.actionToggleAutoScaleMinMax) {
+            chart.setAutoScaleMinMaxEnabled(!chart.isAutoScaleMinMaxEnabled());
+            chart.notifyDataSetChanged();
+        } else if (itemId == R.id.actionSave) {
+            if (ContextCompat.checkSelfPermission(this, permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED) {
+                saveToGallery();
+            } else {
+                requestStoragePermission(chart);
             }
         }
         return true;

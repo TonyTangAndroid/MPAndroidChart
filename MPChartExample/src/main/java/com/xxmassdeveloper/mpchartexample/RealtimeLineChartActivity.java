@@ -2,6 +2,7 @@
 package com.xxmassdeveloper.mpchartexample;
 
 import android.Manifest;
+import android.Manifest.permission;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -191,33 +192,25 @@ public class RealtimeLineChartActivity extends DemoBase implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()) {
-            case R.id.viewGithub: {
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse("https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/com/xxmassdeveloper/mpchartexample/RealtimeLineChartActivity.java"));
-                startActivity(i);
-                break;
-            }
-            case R.id.actionAdd: {
-                addEntry();
-                break;
-            }
-            case R.id.actionClear: {
-                chart.clearValues();
-                Toast.makeText(this, "Chart cleared!", Toast.LENGTH_SHORT).show();
-                break;
-            }
-            case R.id.actionFeedMultiple: {
-                feedMultiple();
-                break;
-            }
-            case R.id.actionSave: {
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    saveToGallery();
-                } else {
-                    requestStoragePermission(chart);
-                }
-                break;
+        int itemId = item.getItemId();
+        if (itemId == R.id.viewGithub) {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(
+                "https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/com/xxmassdeveloper/mpchartexample/RealtimeLineChartActivity.java"));
+            startActivity(i);
+        } else if (itemId == R.id.actionAdd) {
+            addEntry();
+        } else if (itemId == R.id.actionClear) {
+            chart.clearValues();
+            Toast.makeText(this, "Chart cleared!", Toast.LENGTH_SHORT).show();
+        } else if (itemId == R.id.actionFeedMultiple) {
+            feedMultiple();
+        } else if (itemId == R.id.actionSave) {
+            if (ContextCompat.checkSelfPermission(this, permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED) {
+                saveToGallery();
+            } else {
+                requestStoragePermission(chart);
             }
         }
         return true;

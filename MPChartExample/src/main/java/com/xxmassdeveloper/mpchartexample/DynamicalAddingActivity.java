@@ -2,6 +2,7 @@
 package com.xxmassdeveloper.mpchartexample;
 
 import android.Manifest;
+import android.Manifest.permission;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -190,45 +191,33 @@ public class DynamicalAddingActivity extends DemoBase implements OnChartValueSel
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()) {
-            case R.id.viewGithub: {
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse("https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/com/xxmassdeveloper/mpchartexample/DynamicalAddingActivity.java"));
-                startActivity(i);
-                break;
-            }
-            case R.id.actionAddEntry: {
-                addEntry();
-                Toast.makeText(this, "Entry added!", Toast.LENGTH_SHORT).show();
-                break;
-            }
-            case R.id.actionRemoveEntry: {
-                removeLastEntry();
-                Toast.makeText(this, "Entry removed!", Toast.LENGTH_SHORT).show();
-                break;
-            }
-            case R.id.actionAddDataSet: {
-                addDataSet();
-                Toast.makeText(this, "DataSet added!", Toast.LENGTH_SHORT).show();
-                break;
-            }
-            case R.id.actionRemoveDataSet: {
-                removeDataSet();
-                Toast.makeText(this, "DataSet removed!", Toast.LENGTH_SHORT).show();
-                break;
-            }
-            case R.id.actionClear: {
-                chart.clear();
-                Toast.makeText(this, "Chart cleared!", Toast.LENGTH_SHORT).show();
-                break;
-            }
-            case R.id.actionSave: {
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    saveToGallery();
-                } else {
-                    requestStoragePermission(chart);
-                }
-                break;
+        int itemId = item.getItemId();
+        if (itemId == R.id.viewGithub) {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(
+                "https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/com/xxmassdeveloper/mpchartexample/DynamicalAddingActivity.java"));
+            startActivity(i);
+        } else if (itemId == R.id.actionAddEntry) {
+            addEntry();
+            Toast.makeText(this, "Entry added!", Toast.LENGTH_SHORT).show();
+        } else if (itemId == R.id.actionRemoveEntry) {
+            removeLastEntry();
+            Toast.makeText(this, "Entry removed!", Toast.LENGTH_SHORT).show();
+        } else if (itemId == R.id.actionAddDataSet) {
+            addDataSet();
+            Toast.makeText(this, "DataSet added!", Toast.LENGTH_SHORT).show();
+        } else if (itemId == R.id.actionRemoveDataSet) {
+            removeDataSet();
+            Toast.makeText(this, "DataSet removed!", Toast.LENGTH_SHORT).show();
+        } else if (itemId == R.id.actionClear) {
+            chart.clear();
+            Toast.makeText(this, "Chart cleared!", Toast.LENGTH_SHORT).show();
+        } else if (itemId == R.id.actionSave) {
+            if (ContextCompat.checkSelfPermission(this, permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED) {
+                saveToGallery();
+            } else {
+                requestStoragePermission(chart);
             }
         }
 

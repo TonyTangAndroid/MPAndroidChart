@@ -240,39 +240,32 @@ public class CombinedChartActivity extends DemoBase {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.viewGithub: {
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse("https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/com/xxmassdeveloper/mpchartexample/CombinedChartActivity.java"));
-                startActivity(i);
-                break;
+        int itemId = item.getItemId();
+        if (itemId == R.id.viewGithub) {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(
+                "https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/com/xxmassdeveloper/mpchartexample/CombinedChartActivity.java"));
+            startActivity(i);
+        } else if (itemId == R.id.actionToggleLineValues) {
+            for (IDataSet set : chart.getData().getDataSets()) {
+                if (set instanceof LineDataSet)
+                    set.setDrawValues(!set.isDrawValuesEnabled());
             }
-            case R.id.actionToggleLineValues: {
-                for (IDataSet set : chart.getData().getDataSets()) {
-                    if (set instanceof LineDataSet)
-                        set.setDrawValues(!set.isDrawValuesEnabled());
-                }
 
-                chart.invalidate();
-                break;
+            chart.invalidate();
+        } else if (itemId == R.id.actionToggleBarValues) {
+            for (IDataSet set : chart.getData().getDataSets()) {
+                if (set instanceof BarDataSet)
+                    set.setDrawValues(!set.isDrawValuesEnabled());
             }
-            case R.id.actionToggleBarValues: {
-                for (IDataSet set : chart.getData().getDataSets()) {
-                    if (set instanceof BarDataSet)
-                        set.setDrawValues(!set.isDrawValuesEnabled());
-                }
 
-                chart.invalidate();
-                break;
-            }
-            case R.id.actionRemoveDataSet: {
-                int rnd = (int) getRandom(chart.getData().getDataSetCount(), 0);
-                chart.getData().removeDataSet(chart.getData().getDataSetByIndex(rnd));
-                chart.getData().notifyDataChanged();
-                chart.notifyDataSetChanged();
-                chart.invalidate();
-                break;
-            }
+            chart.invalidate();
+        } else if (itemId == R.id.actionRemoveDataSet) {
+            int rnd = (int) getRandom(chart.getData().getDataSetCount(), 0);
+            chart.getData().removeDataSet(chart.getData().getDataSetByIndex(rnd));
+            chart.getData().notifyDataChanged();
+            chart.notifyDataSetChanged();
+            chart.invalidate();
         }
         return true;
     }

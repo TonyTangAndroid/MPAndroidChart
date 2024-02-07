@@ -2,6 +2,7 @@
 package com.xxmassdeveloper.mpchartexample;
 
 import android.Manifest;
+import android.Manifest.permission;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -158,67 +159,50 @@ public class ScatterChartActivity extends DemoBase implements OnSeekBarChangeLis
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()) {
-            case R.id.viewGithub: {
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse("https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/com/xxmassdeveloper/mpchartexample/ScatterChartActivity.java"));
-                startActivity(i);
-                break;
+        int itemId = item.getItemId();
+        if (itemId == R.id.viewGithub) {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(
+                "https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/com/xxmassdeveloper/mpchartexample/ScatterChartActivity.java"));
+            startActivity(i);
+        } else if (itemId == R.id.actionToggleValues) {
+            List<IScatterDataSet> sets = chart.getData()
+                .getDataSets();
+
+            for (IScatterDataSet iSet : sets) {
+
+                ScatterDataSet set = (ScatterDataSet) iSet;
+                set.setDrawValues(!set.isDrawValuesEnabled());
             }
-            case R.id.actionToggleValues: {
-                List<IScatterDataSet> sets = chart.getData()
-                        .getDataSets();
 
-                for (IScatterDataSet iSet : sets) {
-
-                    ScatterDataSet set = (ScatterDataSet) iSet;
-                    set.setDrawValues(!set.isDrawValuesEnabled());
-                }
-
+            chart.invalidate();
+        } else if (itemId == R.id.actionToggleHighlight) {
+            if (chart.getData() != null) {
+                chart.getData().setHighlightEnabled(!chart.getData().isHighlightEnabled());
                 chart.invalidate();
-                break;
             }
-            case R.id.actionToggleHighlight: {
-                if(chart.getData() != null) {
-                    chart.getData().setHighlightEnabled(!chart.getData().isHighlightEnabled());
-                    chart.invalidate();
-                }
-                break;
-            }
-            case R.id.actionTogglePinch: {
-                if (chart.isPinchZoomEnabled())
-                    chart.setPinchZoom(false);
-                else
-                    chart.setPinchZoom(true);
+        } else if (itemId == R.id.actionTogglePinch) {
+            if (chart.isPinchZoomEnabled())
+                chart.setPinchZoom(false);
+            else
+                chart.setPinchZoom(true);
 
-                chart.invalidate();
-                break;
-            }
-            case R.id.actionToggleAutoScaleMinMax: {
-                chart.setAutoScaleMinMaxEnabled(!chart.isAutoScaleMinMaxEnabled());
-                chart.notifyDataSetChanged();
-                break;
-            }
-            case R.id.animateX: {
-                chart.animateX(3000);
-                break;
-            }
-            case R.id.animateY: {
-                chart.animateY(3000);
-                break;
-            }
-            case R.id.animateXY: {
-
-                chart.animateXY(3000, 3000);
-                break;
-            }
-            case R.id.actionSave: {
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    saveToGallery();
-                } else {
-                    requestStoragePermission(chart);
-                }
-                break;
+            chart.invalidate();
+        } else if (itemId == R.id.actionToggleAutoScaleMinMax) {
+            chart.setAutoScaleMinMaxEnabled(!chart.isAutoScaleMinMaxEnabled());
+            chart.notifyDataSetChanged();
+        } else if (itemId == R.id.animateX) {
+            chart.animateX(3000);
+        } else if (itemId == R.id.animateY) {
+            chart.animateY(3000);
+        } else if (itemId == R.id.animateXY) {
+            chart.animateXY(3000, 3000);
+        } else if (itemId == R.id.actionSave) {
+            if (ContextCompat.checkSelfPermission(this, permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED) {
+                saveToGallery();
+            } else {
+                requestStoragePermission(chart);
             }
         }
         return true;
